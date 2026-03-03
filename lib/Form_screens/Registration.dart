@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skillbridge_excercise_app/Form_screens/translations.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -15,11 +17,41 @@ class _RegistrationState extends State<Registration> {
   bool hide = false;
   final _formKey = GlobalKey<FormState>();
   final countries = ['Ethiopia',"Kenya", "Sudan", "Somalia","Eritrea", "Djbouti", "Other"];
+  final Languages = ["Eng", "Amh", "Oromo" ];
+  String selectedLanguage = "Eng";
   String? selectedValue;
   String? selectedGender;
   bool isMusicChecked= false;
   bool isArtChecked= false;
   bool isWritingChecked= false;
+
+  Future<void> saveLanguage(String lang) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('language', lang);
+  }
+
+  Future<void> loadLanguage() async {
+    final pref = await SharedPreferences.getInstance();
+    final language = pref.getString('language');
+
+    if (language != null) {
+      setState(() {
+        selectedLanguage = language;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadLanguage();
+  }
+
+
+  String tran(String key){
+
+    return translations[selectedLanguage]?[key] ?? key;
+  }
 
   @override
   void dispose(){
@@ -45,8 +77,6 @@ class _RegistrationState extends State<Registration> {
             'art':isArtChecked,
             'music':isMusicChecked,
             'writing': isWritingChecked
-
-
           }
       );
     }
@@ -57,7 +87,24 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registration"),
+        title: Text(tran("registration")),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownButton(
+                value: selectedLanguage,
+                items: Languages.map((L)=>
+                    DropdownMenuItem(
+                      value: L,
+                    child: Text(L))).toList(),
+                onChanged: (value){
+                  setState(() {
+                    selectedLanguage = value!;
+                  });
+                  saveLanguage(value!);
+                }),
+          )
+        ],
         elevation: 3,
       ),
       body: Padding(
@@ -72,8 +119,8 @@ class _RegistrationState extends State<Registration> {
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: "Name",
-                  hintText: "Enter Your Name",
+                  labelText: tran("name"),
+                  hintText: tran("nameHint"),
                   border: OutlineInputBorder()
                 ),
                 validator: (value){
@@ -88,8 +135,8 @@ class _RegistrationState extends State<Registration> {
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                    labelText: "Email",
-                    hintText: "Enter Your email address",
+                    labelText: tran("email"),
+                    hintText: tran("emailHint"),
                     border: OutlineInputBorder()
                 ),
                 validator: (value){
@@ -106,8 +153,8 @@ class _RegistrationState extends State<Registration> {
                 controller: passwordController,
                 obscureText: hide,
                 decoration: InputDecoration(
-                    labelText: "Password",
-                    hintText: "Enter Your password",
+                    labelText:tran("password"),
+                    hintText: tran("passwordHint"),
                     border: OutlineInputBorder(),
                   suffixIcon: GestureDetector(
                     onTap: (){
@@ -131,10 +178,10 @@ class _RegistrationState extends State<Registration> {
               //Dropdown of citizen
               DropdownButtonFormField(
 
-                hint: Text("Country"),
+
                   decoration: InputDecoration(
-                      labelText: "Select your Citizenship",
-                      hintText: "Country",
+                      labelText: tran("country"),
+                      hintText: tran("countryHint"),
                       border: OutlineInputBorder()
                   ),
                   value: selectedValue,
@@ -157,8 +204,8 @@ class _RegistrationState extends State<Registration> {
                 TextFormField(
                   controller: countryController,
                   decoration: InputDecoration(
-                      labelText: "Country",
-                      hintText: "Enter Your Country",
+                      labelText: tran("country"),
+                      hintText: tran("countryHint"),
                       border: OutlineInputBorder()
                   ),
                   validator: (value){
