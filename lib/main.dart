@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skillbridge_excercise_app/Form_screens/Registration.dart';
 import 'package:skillbridge_excercise_app/Form_screens/display_data.dart';
+import 'package:skillbridge_excercise_app/Form_screens/images_display.dart';
 import 'package:skillbridge_excercise_app/screen_1.dart';
 import 'package:skillbridge_excercise_app/screen_2.dart';
 
@@ -9,7 +10,7 @@ void main() {
   runApp(MaterialApp(
     initialRoute : '/',
     routes:{
-      '/':(context)=> Registration(),
+      '/':(context)=> displayImages(),
       '/displayData': (context)=> DisplayData()
     },
     debugShowCheckedModeBanner: false,
