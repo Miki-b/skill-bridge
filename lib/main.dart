@@ -6,11 +6,13 @@ import 'package:skillbridge_excercise_app/Form_screens/images_display.dart';
 import 'package:skillbridge_excercise_app/screen_1.dart';
 import 'package:skillbridge_excercise_app/screen_2.dart';
 
+import 'api/posts_screen.dart';
+
 void main() {
   runApp(MaterialApp(
     initialRoute : '/',
     routes:{
-      '/':(context)=> displayImages(),
+      '/':(context)=> postsScreen(),
       '/displayData': (context)=> DisplayData()
     },
     debugShowCheckedModeBanner: false,
